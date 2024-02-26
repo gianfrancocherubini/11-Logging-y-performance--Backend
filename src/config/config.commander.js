@@ -15,7 +15,7 @@ if(!modosPermitidos.includes(opts.mode.toLowerCase())){
     process.exit()
 }
 
-const mode=opts.mode
+export const mode=opts.mode
 
 dotenv.config(
     {
