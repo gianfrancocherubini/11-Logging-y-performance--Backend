@@ -18,11 +18,11 @@ export class PerfilController {
         try {
             let usuario = req.session.usuario;
             let mensajeEnviado= await enviarWs(consulta);
-            console.log(mensajeEnviado)
+            req.logger.info(consulta)
             res.setHeader('Content-Type', 'text/html');
             res.status(201).render('perfil',{ mensajeEnviado, usuario, login: true });
         } catch (error) {
-            console.error('Error al enviar el mensaje de WhatsApp:', error);
+            req.logger.error("Error al enviar consulta")
             res.setHeader('Content-Type', 'text/html');
             res.status(500).send("Error al enviar la consulta. Por favor, inténtalo de nuevo más tarde.");
         }

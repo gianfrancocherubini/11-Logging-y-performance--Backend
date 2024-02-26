@@ -25,8 +25,8 @@ export class ProductsController{
                 currentCategory: category, 
             });
     
-        } catch (err) {
-            console.error(err);
+        } catch (error) {
+            req.logger.error('Error al obtener los productos');
             res.setHeader('Content-Type', 'application/json');
             res.status(500).json({ error: 'Error al obtener productos' });
         }
@@ -61,11 +61,11 @@ export class ProductsController{
             
     
             await productsService.createProduct(newProductData);
-            console.log(newProductData);
+            req.logger.info(`Se creo el producto: ${newProductData.title}`);
             res.setHeader('Content-Type', 'application/json');
             return res.status(201).json({ success: true, message: 'Producto agregado correctamente.', newProductData });
         } catch (error) {
-            console.error(error);
+            req.logger.error('Error al agregar el producto');
             res.setHeader('Content-Type', 'application/json');
             return res.status(500).json({ error: 'Error al agregar el producto.' });
         }
@@ -92,7 +92,7 @@ export class ProductsController{
             const updateResult = await productsService.update(productId, req.body);
     
             if (updateResult) {
-                console.log('Producto actualizado:', productId,', Modificacion:',req.body);
+                req.logger.info(`Producto actualizado: ${productId}`);
                 res.setHeader('Content-Type', 'application/json');
                 return res.status(200).json({ success: true, message: 'Modificación realizada.' });
             } else {
@@ -100,7 +100,7 @@ export class ProductsController{
                 return res.status(400).json({ error: 'No se concretó la modificación.' });
             }
         } catch (error) {
-            console.error(error);
+            req.logger.error('Error al actualizar el producto');
             res.setHeader('Content-Type', 'application/json');
             return res.status(500).json({ error: 'Error al actualizar el producto.' });
         }

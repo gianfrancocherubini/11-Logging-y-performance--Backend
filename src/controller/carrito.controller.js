@@ -74,7 +74,7 @@ const ticketDao = new ticketMongoDao();
             }
         
             const updatedCart = await carritoService.addProduct(cartId, productId, quantity);
-            req.logger.info(`Producto : ${productId} agregado correctamente a Carrito`)
+            req.logger.info(`Producto : ${productId} agregado correctamente al Carrito`)
             res.setHeader('Content-Type', 'application/json');
             res.status(200).json(updatedCart);
           } catch (error) {
@@ -175,7 +175,7 @@ const ticketDao = new ticketMongoDao();
     
             res.setHeader('Content-Type', 'application/json');
             res.status(200).json({ ticket: ticketDetails, message: 'Ticket generado correctamente' });
-            req.logger.info(ticketDetails.code);
+            req.logger.info(`Se genero el Ticket: ${ticketDetails.code}`);
         } catch (error) {
             req.logger.error('Error al generar el ticket');
             res.setHeader('Content-Type', 'application/json');

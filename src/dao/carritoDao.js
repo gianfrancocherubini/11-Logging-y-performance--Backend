@@ -9,7 +9,7 @@ export class CarritoMongoDao {
             await newCart.save();
             return newCart;
         } catch (error) {
-            console.log("Error al crear un carrito vacío", error);
+            req.logger.error("Error al crear un carrito vacío");
             throw error;
         }
     }
@@ -19,7 +19,7 @@ export class CarritoMongoDao {
             const cart = await Cart.findById(cartId).populate('items.product').lean();
             return cart;
         } catch (error) {
-            console.log("Error al obtener el carrito por ID", error);
+            req.logger.error("Error al obtener el carrito por ID");
             throw error;
         }
     }
@@ -30,10 +30,10 @@ export class CarritoMongoDao {
             const product = await ProductEsquema.findById(productId);
 
             if (!cart) {
-                console.log('Carrito no encontrado');
+                req.logger.error('Carrito no encontrado');
             }
             if (!product) {
-                console.log('Producto no encontrado');
+                req.logger.error('Producto no encontrado');
             }
 
             const existingItemIndex = cart.items.findIndex(item => item.product.equals(productId));
@@ -51,7 +51,7 @@ export class CarritoMongoDao {
             const updatedCart = await Cart.findById(cartId);
             return updatedCart;
         } catch (error) {
-            console.log("Error al añadir producto al carrito", error);
+            req.logger.error("Error al añadir producto al carrito");
             throw error;
         }
     }
@@ -69,7 +69,7 @@ export class CarritoMongoDao {
                 // Elimina el producto del array de items
                 cart.items.splice(existingItemIndex, 1);
             } else {
-                console.log('Producto no encontrado en el carrito.');
+                req.logger.error('Producto no encontrado en el carrito.');
             }
 
             // Llama a save para aplicar los cambios en la base de datos
@@ -77,7 +77,7 @@ export class CarritoMongoDao {
             const updatedCart = await Cart.findById(cartId);
             return updatedCart;
         } catch (error) {
-            console.log("Error al eliminar producto del carrito", error);
+            req.logger.error("Error al eliminar producto del carrito");
             throw error;
         }
     }
@@ -92,7 +92,7 @@ export class CarritoMongoDao {
             // Elimina el carrito directamente
             return await Cart.findByIdAndDelete(cartId);
         } catch (error) {
-            console.log("Error al eliminar el carrito", error);
+            req.logger.error("Error al eliminar el carrito");
             throw error;
         }
     }
