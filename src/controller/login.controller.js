@@ -24,7 +24,6 @@ export class LoginController {
     }
 
     static async loginLocal(req,res){
-        console.log('Ingreso el usuario:', req.user)
         req.session.usuario = {
         nombre: req.user.nombre,
         email: req.user.email,
