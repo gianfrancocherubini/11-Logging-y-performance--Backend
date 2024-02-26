@@ -25,33 +25,50 @@ const niveles = {
   
   const loggerDesarrollo = winston.createLogger({
     levels: niveles,
-    format: winston.format.simple(),
     transports: [
-      new winston.transports.Console({ level: 'debug' })
+      new winston.transports.Console({ 
+
+        level: "debug",
+        format: winston.format.combine(
+            winston.format.timestamp(),
+            winston.format.simple(),
+        )
+
+        })
     ],
     
   });
   
   const loggerProduccion = winston.createLogger({
     levels: niveles,
-    format: winston.format.combine(
-        winston.format.timestamp(), 
-        winston.format.simple()
-      ),
     transports: [
-      new winston.transports.Console({ level: 'info' }),
-      new winston.transports.File({ filename: './src/logs/errorLogs.log', level: 'error' })
+
+      new winston.transports.Console({
+            
+        level: 'info',
+        format: winston.format.combine(
+            winston.format.timestamp(),
+            winston.format.simple(),
+        )
+     }),
+
+      new winston.transports.File({
+
+        level:"error",
+        filename:"./src/logs/errorLogs.log",
+        format: winston.format.combine(
+            winston.format.timestamp(),
+            winston.format.json()
+        ) })
     ],
     
   });
   
   export const middLogg = (req, res, next) => {
-    let logger;
     if (mode === 'prod') {
-      logger = loggerProduccion;
+      req.logger = loggerProduccion;
     } else {
-      logger = loggerDesarrollo;
+      req.logger = loggerDesarrollo;
     }
-    req.logger = logger;
     next();
   };

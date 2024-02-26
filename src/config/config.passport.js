@@ -5,6 +5,7 @@ import { creaHash, validaPassword } from '../utils.js'
 import { UsuariosMongoDao } from '../dao/usuariosDao.js'
 import { CarritoMongoDao } from '../dao/carritoDao.js'
 
+
 const usuariosDao = new UsuariosMongoDao();
 const carritoDao=new CarritoMongoDao();
 
@@ -19,6 +20,7 @@ export const inicializarPassport=()=>{
         async(req, username, password, done)=>{
             try { 
                 let {nombre, email}=req.body
+                
                 if(!nombre || !email || !password){
                     return done(null, false)
                 }
@@ -39,7 +41,7 @@ export const inicializarPassport=()=>{
                         let hashedPassword = creaHash(password);
                         let usuario = await usuariosDao.createAdmin(nombre, email, hashedPassword, 'administrador');
                         delete usuario.password
-                        console.log(usuario);
+                        req.logger.info(`Se registro el usuario ${usuario}`)
                         return done(null, usuario)
                     } catch (error) {
                         return done(null, false)
@@ -50,7 +52,7 @@ export const inicializarPassport=()=>{
                         let {_id:carrito} = await carritoDao.createEmptyCart()
                         let usuario = await usuariosDao.crearUsuarioRegular(nombre, email, password, carrito);
                         delete usuario.password
-                        console.log(usuario)
+                        req.logger.error(`Se registro el usuario ${usuario}`)
 
                         return done(null, usuario)
                     } catch (error) {

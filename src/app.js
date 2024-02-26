@@ -6,6 +6,7 @@ import mongoStore from 'connect-mongo';
 import cookieParser from 'cookie-parser';
 import __dirname from './utils.js';
 import passport from 'passport';
+import { middLogg } from './utils.js';
 import { engine } from 'express-handlebars';
 import { config } from './config/config.commander.js';
 import { inicializarPassport } from './config/config.passport.js';
@@ -37,6 +38,7 @@ app.use(sessions(
     }
 ))
 
+app.use(middLogg);
 app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, 'views'));
