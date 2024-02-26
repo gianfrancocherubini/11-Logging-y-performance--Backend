@@ -52,7 +52,7 @@ export const inicializarPassport=()=>{
                         let {_id:carrito} = await carritoDao.createEmptyCart()
                         let usuario = await usuariosDao.crearUsuarioRegular(nombre, email, password, carrito);
                         delete usuario.password
-                        req.logger.error(`Se registro el usuario ${usuario}`)
+                        req.logger.info(`Se registro el usuario ${usuario}`)
 
                         return done(null, usuario)
                     } catch (error) {
@@ -85,10 +85,11 @@ export const inicializarPassport=()=>{
             
                 if (!validaPassword(usuario, password)) {
                     return done(null, false)
-                }  
+                } 
+                
                 delete usuario.password
-                console.log("ingreso el usuario:", usuario);
-                return done(null, usuario)
+                return done(null, usuario);
+                
                  
             } catch (error) {
                 done(error, null)

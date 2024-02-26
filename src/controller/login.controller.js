@@ -24,13 +24,14 @@ export class LoginController {
     }
 
     static async loginLocal(req,res){
+        
         req.session.usuario = {
         nombre: req.user.nombre,
         email: req.user.email,
         rol: req.user.rol,
         carrito: req.user.carrito
     };
-
+    req.logger.info(`Inicio sesion el usuario: ${req.session.usuario.nombre}`) 
     res.redirect('/');
     }
 }

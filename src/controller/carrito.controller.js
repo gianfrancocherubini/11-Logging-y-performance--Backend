@@ -28,7 +28,7 @@ const ticketDao = new ticketMongoDao();
             if (!cartId) {
                 res.setHeader('Content-Type', 'application/json');
                 res.status(400).json({ error: 'Se debe proporcionar un ID de carrito válido.' });
-                console.log('Se debe proporcionar un ID de carrito válido.');
+                req.logger.error('Se debe proporcionar un ID de carrito válido.');
                 return;
             }
             
@@ -52,9 +52,9 @@ const ticketDao = new ticketMongoDao();
             let usuario = req.session.usuario;
             res.setHeader('Content-Type', 'text/html');
             res.status(200).render('carrito', {carts : cart, usuario, login : true, totalCartPrice: totalCartPrice}) ;
-            console.log('Carrito:', cart._id , 'con los items:', cart.items)
+            req.logger.info(`Carrito: ${cart._id}`)
         } catch (error) {
-            console.error(error);
+            req.logger.error("Error al obtener el carrito");
             res.setHeader('Content-Type', 'application/json');
             res.status(500).json({ error: 'Error al obtener el carrito.' });
         }
@@ -74,11 +74,11 @@ const ticketDao = new ticketMongoDao();
             }
         
             const updatedCart = await carritoService.addProduct(cartId, productId, quantity);
-            console.log(`Producto : ${productId} agregado correctamente a Carrito : ${cartId}`)
+            req.logger.info(`Producto : ${productId} agregado correctamente a Carrito`)
             res.setHeader('Content-Type', 'application/json');
             res.status(200).json(updatedCart);
           } catch (error) {
-            console.error(error);
+            req.logger.error('error al agregar el producto al carrito');
             res.setHeader('Content-Type', 'application/json');
             res.status(500).json({ error: 'Error al agregar el producto al carrito.' });
           }       
@@ -96,11 +96,11 @@ const ticketDao = new ticketMongoDao();
             }
     
             const deleteProductToCart = await carritoService.deleteProduct(cartId, productId);
-            console.log(`Producto : ${productId} eliminado de ${cartId} correctamente`)
+            req.logger.info(`Producto : ${productId} eliminado del carrito`)
             res.setHeader('Content-Type', 'application/json');
             res.status(200).json({message: `Producto : ${productId} eliminado de ${cartId} correctamente`});
         } catch (error) {
-            console.error(error);
+            req.logger.error('Error al eliminar el producto del carrito');
             res.setHeader('Content-Type', 'application/json');
             res.status(500).json({ error: 'Error al eliminar el producto del carrito.' });
         }
@@ -117,13 +117,13 @@ const ticketDao = new ticketMongoDao();
             }
     
             const deletedCart = await carritoService.cartDelete(cartId);
-            console.log(`Carrito: ${cartId} eliminado correctamente`)
+            req.logger.info(`Carrito: ${cartId} eliminado correctamente`)
             res.setHeader('Content-Type', 'application/json');
             res.status(200).json(`Carrito : ${cartId} eliminado correctamente`);
         } catch (error) {
-            console.error(error);
+            req.logger.error('Error al eliminar el carrito');
             res.setHeader('Content-Type', 'application/json');
-            res.status(500).json({ error: 'Error al eliminar el producto del carrito.' });
+            res.status(500).json({ error: 'Error al eliminar el carrito.' });
         }
     }
 
@@ -175,9 +175,9 @@ const ticketDao = new ticketMongoDao();
     
             res.setHeader('Content-Type', 'application/json');
             res.status(200).json({ ticket: ticketDetails, message: 'Ticket generado correctamente' });
-            console.log(ticketDetails);
+            req.logger.info(ticketDetails.code);
         } catch (error) {
-            console.error(error);
+            req.logger.error('Error al generar el ticket');
             res.setHeader('Content-Type', 'application/json');
             res.status(500).json({ error: 'Error al generar ticket.' });
         }
